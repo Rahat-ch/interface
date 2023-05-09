@@ -11,7 +11,7 @@
     "incremental": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": ["DOM", "ES6", "DOM.Iterable", "ScriptHost", "ES2019.Array"],
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
@@ -24,7 +24,7 @@
     "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": true,
-    "target": "ESNext",
+    "target": "es6",
     "tsBuildInfoFile": "node_modules/.cache/.tsbuildinfo",
     "types": ["jest"],
     "useUnknownInCatchVariables": false

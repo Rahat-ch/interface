@@ -12,6 +12,8 @@ const isProduction = process.env.NODE_ENV === 'production'
 // Omit them from production builds, as they slow down the feedback loop.
 const shouldLintOrTypeCheck = !isProduction
 
+const webpack = require('webpack')
+
 module.exports = {
   babel: {
     plugins: [
@@ -65,7 +67,13 @@ module.exports = {
     },
   },
   webpack: {
-    plugins: [new VanillaExtractPlugin({ identifiers: 'short' })],
+    plugins: [
+      new VanillaExtractPlugin({ identifiers: 'short' }),
+      // new webpack.ProvidePlugin({
+      //   Buffer: ['buffer', 'Buffer'],
+      //   process: 'process/browser',
+      // }),
+    ],
     configure: (webpackConfig) => {
       webpackConfig.plugins = webpackConfig.plugins
         .map((plugin) => {
@@ -100,7 +108,22 @@ module.exports = {
       // Instead, we need to manually map the import path to the correct exports path (eg dist or build folder).
       // See https://github.com/webpack/webpack/issues/9509.
       webpackConfig.resolve.alias['@uniswap/conedison'] = '@uniswap/conedison/dist'
-
+      const fallback = webpackConfig.resolve.fallback || {}
+      Object.assign(fallback, {
+        fs: false,
+        crypto: require.resolve('crypto-browserify'),
+        stream: require.resolve('stream-browserify'),
+        assert: require.resolve('assert'),
+        http: require.resolve('stream-http'),
+        os: require.resolve('os-browserify'),
+        https: require.resolve('https-browserify'),
+        url: require.resolve('url'),
+        zlib: require.resolve('browserify-zlib'),
+        path: require.resolve('path-browserify'),
+        'c-kzg': require.resolve('c-kzg'),
+        'process/browser': require.resolve('process/browser'),
+      })
+      webpackConfig.resolve.fallback = fallback
       return webpackConfig
     },
   },
